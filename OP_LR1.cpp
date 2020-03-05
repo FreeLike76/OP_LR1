@@ -53,8 +53,10 @@ int main()
 		cin >> path;
 		All[i] = readfile(path,sizes,i);
 	}
-	cout << All[0][1].getName() << endl << All[0][2].getName() << All[0][2].getScore() << endl;;
-	cout << All[1][2].getName() << All[1][2].getScore();
+	for (int i = 1; i < filenum; i++)
+	{
+		combineTeam(All[0], All[i], sizes, 0, i);
+	}
 }
 
 Team* readfile(string path,int* sizes,int iter)
@@ -94,6 +96,27 @@ Team* readfile(string path,int* sizes,int iter)
 			}
 
 		}
+		file.close();
 		return thisfileteams;
 	}
+	return nullptr;
+}
+
+void combineTeam(Team*& Main,Team* Second,int*sizes,int index1,int index2)
+{
+	int newsize = sizes[index1] + sizes[index2];
+	Team* Newmain = new Team[newsize];
+	for (int i = 0; i < sizes[index1]; i++)
+	{
+		Newmain[i].setName(Main[i].getName());
+		Newmain[i].setScore(Main[i].getScore());
+	}
+	for (int i = sizes[index1]; i < newsize; i++)
+	{
+		Newmain[i].setName(Second[i].getName());
+		Newmain[i].setScore(Second[i].getScore());
+	}
+	sizes[index1] = newsize;
+	delete[]Main;
+	Main = Newmain;
 }
