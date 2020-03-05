@@ -38,6 +38,7 @@ public:
 };
 
 Team* readfile(string path, int* sizes, int iter);
+void combineTeam(Team* Main, Team** All, int* sizes, int filenum);
 
 int main()
 {
@@ -53,10 +54,20 @@ int main()
 		cin >> path;
 		All[i] = readfile(path,sizes,i);
 	}
-	for (int i = 1; i < filenum; i++)
+	int allteams=0;
+	for (int i = 0; i < filenum; i++)
 	{
-		combineTeam(All[0], All[i], sizes, 0, i);
+		allteams += sizes[i];
 	}
+	Team* Main = new Team[allteams];
+	combineTeam(Main, All, sizes, filenum);
+	delete[] sizes;
+	for (int i = 0; i < filenum; i++)
+	{
+		delete[] All[i];
+	}
+	delete[] All;
+
 }
 
 Team* readfile(string path,int* sizes,int iter)
@@ -102,21 +113,16 @@ Team* readfile(string path,int* sizes,int iter)
 	return nullptr;
 }
 
-void combineTeam(Team*& Main,Team* Second,int*sizes,int index1,int index2)
+void combineTeam(Team* Main,Team** All,int*sizes,int filenum)
 {
-	int newsize = sizes[index1] + sizes[index2];
-	Team* Newmain = new Team[newsize];
-	for (int i = 0; i < sizes[index1]; i++)
+	int where=0;
+	for (int i = 0; i < filenum; i++)
 	{
-		Newmain[i].setName(Main[i].getName());
-		Newmain[i].setScore(Main[i].getScore());
+		for (int j = 0; j <sizes[i]; j++)
+		{
+			Main[j+where].setName(All[i][j].getName());
+			Main[j+where].setScore(All[i][j].getScore());
+		}
+		where += sizes[i];
 	}
-	for (int i = sizes[index1]; i < newsize; i++)
-	{
-		Newmain[i].setName(Second[i].getName());
-		Newmain[i].setScore(Second[i].getScore());
-	}
-	sizes[index1] = newsize;
-	delete[]Main;
-	Main = Newmain;
 }
