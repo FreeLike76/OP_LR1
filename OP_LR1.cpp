@@ -39,6 +39,7 @@ public:
 
 Team* readfile(string path, int* sizes, int iter);
 void combineTeam(Team* Main, Team** All, int* sizes, int filenum);
+void sortTeams(Team* Main, int size);
 
 int main()
 {
@@ -67,7 +68,7 @@ int main()
 		delete[] All[i];
 	}
 	delete[] All;
-
+	sortTeams(Main, allteams);
 }
 
 Team* readfile(string path,int* sizes,int iter)
@@ -125,4 +126,27 @@ void combineTeam(Team* Main,Team** All,int*sizes,int filenum)
 		}
 		where += sizes[i];
 	}
+}
+
+void sortTeams(Team* Main,int size)
+{
+	bool didChange;
+	Team temp;
+	do
+	{
+		didChange = false;
+		for (int i = 1; i < size; i++)
+		{
+			if(Main[i-1].getScore()<Main[i].getScore())
+			{
+				didChange = true;
+				temp.setName(Main[i - 1].getName());
+				temp.setScore(Main[i - 1].getScore());
+				Main[i - 1].setName(Main[i].getName());
+				Main[i - 1].setScore(Main[i].getScore());
+				Main[i].setName(temp.getName());
+				Main[i].setScore(temp.getScore());
+			}
+		}
+	} while (didChange);
 }
