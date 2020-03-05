@@ -40,6 +40,7 @@ public:
 Team* readfile(string path, int* sizes, int iter);
 void combineTeam(Team* Main, Team** All, int* sizes, int filenum);
 void sortTeams(Team* Main, int size);
+void saveteams(Team* Main, int size);
 
 int main()
 {
@@ -69,6 +70,8 @@ int main()
 	}
 	delete[] All;
 	sortTeams(Main, allteams);
+	saveteams(Main, allteams);
+	delete[] Main;
 }
 
 Team* readfile(string path,int* sizes,int iter)
@@ -149,4 +152,20 @@ void sortTeams(Team* Main,int size)
 			}
 		}
 	} while (didChange);
+}
+
+void saveteams(Team* Main, int size)
+{
+	ofstream file;
+	file.open("results.csv");
+	if (!file.is_open())
+		cout << "Can't open result.csv!" << endl;
+	else
+	{
+		for (int i = 0; i < size; i++)
+		{
+			file << Main[i].getName() << ',' << Main[i].getScore() << endl;
+		}
+		file.close();
+	}
 }
